@@ -1,0 +1,43 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free-solid": "^5.0.13",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/react-native-fontawesome": "^0.2.7",
+    "@react-navigation/bottom-tabs": "^6.0.7",
+    "@react-navigation/native": "^6.0.4",
+    "@react-navigation/stack": "^6.0.9",
+    "axios": "^0.24.0",
+    "expo": "~42.0.1",
+    "expo-location": "~12.1.2",
+    "expo-status-bar": "~1.0.4",
+    "firebase": "8.2.3",
+    "geolib": "^3.3.3",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-axios": "^0.17.1",
+    "react-native-elements": "^3.4.2",
+    "react-native-gesture-handler": "^1.10.3",
+    "react-native-google-places-api": "^1.0.2",
+    "react-native-input-scroll-view": "^1.11.0",
+    "react-native-ionicons": "^4.6.5",
+    "react-native-keyboard-aware-scroll-view": "^0.9.4",
+    "react-native-maps": "^0.29.3",
+    "react-native-screens": "^3.7.2",
+    "react-native-svg": "^12.1.1",
+    "react-native-web": "~0.13.12",
+    "save": "^2.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0"
+  },
+  "private": true
+}
