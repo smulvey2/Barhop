@@ -6,10 +6,12 @@ import { Avatar, Image } from 'react-native-elements'
 import { auth, db } from '../firebase'
 import {AntDesign, FontAwesome5} from '@expo/vector-icons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 
 
 const MyTab = ({navigation}) => {
-    const Tab = createBottomTabNavigator()
+    const Tab = createMaterialTopTabNavigator()
 
     const signOut = ()=> {
         auth.signOut().then(() => {
@@ -48,6 +50,7 @@ const MyTab = ({navigation}) => {
     return(
 
         <Tab.Navigator
+        tabBarPosition='bottom'
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -67,7 +70,7 @@ const MyTab = ({navigation}) => {
             }
             
             // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={20} color={color} />;
           },
           tabBarActiveTintColor: '#0992ed',
           tabBarInactiveTintColor: 'gray',
