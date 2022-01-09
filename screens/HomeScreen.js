@@ -30,6 +30,7 @@ const HomeScreen = ({ navigation }) => {
   const [review, setReview] = useState('')
   const [input, setInput] = useState(false)
   const [markersSet, setMarkersSet] = useState(false)
+  const apiURL = 'http://localhost:5000'
 
   console.log(markersSet)
 
@@ -84,7 +85,13 @@ const HomeScreen = ({ navigation }) => {
         return;
       }
 
-      let loc = await Location.getCurrentPositionAsync({});
+      let loc = await Location.getCurrentPositionAsync({}).then(fetch('http://localhost:3000/api/barhopDB', {
+        method: 'get-nearby',
+        // We convert the React state to JSON and send it as the POST body
+        body: JSON.stringify(loc)
+      }).then(function(response) {
+        return response.json();
+      }));
       setLatitude(loc.coords.latitude);
       setLongitude(loc.coords.longitude);
       if(!markersSet){
