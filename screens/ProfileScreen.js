@@ -75,14 +75,15 @@ const ProfileScreen = ({navigation}) => {
       
         return(
       <View style ={{alignItems: 'center', justifyContent: 'center'}}>
-          <Image
+          {/* <Image
           style={{width: 100, height: 100}} 
-          source= {{url}}/>
+          source= {{url}}/> */}
+            
           <Text style={{padding:20}}>
               {firstName} {lastName}
           </Text>
 
-          <TouchableOpacity style={{paddingLeft: 300, padding: 5}} onPress={() => setEditAbout(true)}>
+          {/* <TouchableOpacity style={{paddingLeft: 300, padding: 5}} onPress={() => setEditAbout(true)}>
                 <Ionicons size={30} name="create-outline"></Ionicons>
                 </TouchableOpacity>
 
@@ -99,7 +100,7 @@ const ProfileScreen = ({navigation}) => {
                 :
           <Text style={{padding:20, borderWidth: 2, borderColor: 'black'}}>
                 {about}
-          </Text>}
+          </Text>} */}
           <Text style={{padding:20}}>Bar Mates: {totalFriends}</Text>
           <View style={{padding: 150}}>
           </View>

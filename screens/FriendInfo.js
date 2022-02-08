@@ -12,6 +12,7 @@ const [lastName, setLastName] = useState('');
 const [url, setUrl] = useState('')
 const [about, setAbout] = useState('')
 const [totalFriends, setTotalFriends] = useState('')
+const [initials, setInitials] = useState('')
 
 useEffect(() => {
   db.collection('users').doc(uid).get().then(function(doc) {
@@ -21,6 +22,7 @@ useEffect(() => {
         setUrl(doc.data().photoURL);
         setAbout(doc.data().about ? doc.data().about : "This user hasn't set their bio yet")
         setTotalFriends(doc.data().totalFriends.toString())
+        setInitials(firstName.charAt(0) + lastName.charAt(0))
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -41,9 +43,13 @@ setLoading(false)
 
   return(
 <View style={{alignItems: 'center'}}>
-    <Image
+    {/* <Image
     style={{width: 100, height: 100}} 
-    source= {{url}}/>
+    source= {{url}}/> */}
+          <TouchableOpacity style={{marginTop:15, width: 75, height: 75, borderRadius: 75 / 2, backgroundColor: '#0992eded', borderColor: 'black', borderWidth: 4, justifyContent:'center'}}>
+          <Text style={{color: 'white', textAlign:'center', fontSize:35}}>{initials}</Text>            
+          </TouchableOpacity>
+
     <Text style={{padding: 20}}>
         {firstName} {lastName}
     </Text>
@@ -51,9 +57,9 @@ setLoading(false)
       <Text style={{padding: 20}}>
         {about}
         </Text>
-        <Text style={{padding:20}}>
+        {/* <Text style={{padding:20}}>
           Bar Mates: {totalFriends}
-          </Text>
+          </Text> */}
     </View>
 
 </View>
