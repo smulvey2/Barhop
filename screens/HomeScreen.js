@@ -41,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
   const [reviewIndex, setReviewIndex] = useState(-1)
   const [dropdown, setDropdown] = useState(false)
   var markersSet = false
-  const ip = "192.168.0.12"
+  const ip = "18.189.31.193"
   const mapStyle = [
     {
       "elementType": "geometry",
@@ -353,6 +353,7 @@ const HomeScreen = ({ navigation }) => {
 
   //called when bars is changed, checks for friends at bars
   useEffect(() => {
+    console.log('hits')
     if (bars.length > 0) {
       let tempBars = bars;
       tempBars.forEach(bar => {

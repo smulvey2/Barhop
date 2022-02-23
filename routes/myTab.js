@@ -77,7 +77,7 @@ const MyTab = ({navigation}) => {
         })}
       >
             <Tab.Screen name ="Home" component = {HomeStack}/>
-            <Tab.Screen screenOptions={{headerShown:false}} name ="Friends" component = {FriendsStack}/>
+            <Tab.Screen screenOptions={{headerShown:true}} name ="Friends" component = {FriendsStack}/>
             <Tab.Screen name ="Groups" component = {GroupStack}/>
             <Tab.Screen name = "Profile" component={ProfileStack}/>
         </Tab.Navigator>

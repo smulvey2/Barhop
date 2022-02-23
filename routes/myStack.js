@@ -19,7 +19,7 @@ const FriendsStack = ()=> {
 <Stack.Navigator
 screenOptions ={{headerShown: true}}>
 
-<Stack.Screen name = "FriendsHome" component={FriendsScreen} />
+<Stack.Screen name = "Friends" component={FriendsScreen} screenOptions={{headerShown:false}}/>
 <Stack.Screen name = "AddFriends" component={AddFriendsScreen} />
 <Stack.Screen name = "FriendRequests" component={FriendRequests} />
 <Stack.Screen name = "FriendInfo" component={FriendInfo} />
