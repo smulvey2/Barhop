@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image} from 'react-native'
 import { auth, db } from '../firebase'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faBell, faPlus } from '@fortawesome/fontawesome-free-solid'
 import Ionicons from 'react-native-vector-icons/Ionicons'  
 
 const FriendsScreen = ({navigation}) => {
@@ -22,13 +20,13 @@ const FriendsScreen = ({navigation}) => {
             headerLeft: () => (
                 <TouchableOpacity style={{marginLeft: 20}}
                 onPress={()=>navigation.navigate('FriendRequests')}>
-                <FontAwesomeIcon icon = {faBell}/>
+                <Ionicons name='notifications-outline' size={20} color='black' />
                 </TouchableOpacity>
             ),
             headerRight: () => (
                 <TouchableOpacity style={{marginRight: 20}}
                 onPress={()=>navigation.navigate('AddFriends')}>
-                <FontAwesomeIcon icon = {faPlus}/>
+                <Ionicons name='person-add-outline' size={20} color='black' />
                 </TouchableOpacity>
             )
         })

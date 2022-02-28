@@ -2,8 +2,6 @@ import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, FlatList, Image } from 'react-native'
 import { auth, db } from '../../firebase'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
-import { faPlus, faMinus } from '@fortawesome/fontawesome-free-solid'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Input } from 'react-native-elements'
 
 
@@ -95,10 +93,10 @@ return <ActivityIndicator />;
               <Image source= {{uri: item.photoURL}} style={{height:25, width:25}}/>
               <Text style={{paddingLeft: 20}}>{item.firstName} {item.lastName}</Text>
               <TouchableOpacity onPress={() => addToGroup(item)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
-          <FontAwesomeIcon icon = {faPlus}/>
+              <Ionicons name='add-circle-outline' size={20} color='black' />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => removeFromGroup(item.uid)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
-          <FontAwesomeIcon icon = {faMinus}/>
+          <Ionicons name='remove-circle-outline' size={20} color='black' />
           </TouchableOpacity>
             </TouchableOpacity>
           )}

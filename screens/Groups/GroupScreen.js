@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
 import { auth, db } from '../../firebase'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faPlus } from '@fortawesome/fontawesome-free-solid'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 
@@ -34,7 +32,7 @@ const GroupScreen = ({ navigation }) => {
       headerRight: () => (
         <TouchableOpacity style={{ marginRight: 20 }}
           onPress={() => navigation.navigate('Add Groups')}>
-          <FontAwesomeIcon icon={faPlus} />
+          <Ionicons name='add-circle-outline' size={20} color='black' />
         </TouchableOpacity>
       )
     })

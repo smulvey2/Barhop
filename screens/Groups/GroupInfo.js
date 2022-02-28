@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image} from 'react-native'
 import { auth, db } from '../../firebase'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faBell, faPlus } from '@fortawesome/fontawesome-free-solid'
-  
+
 
 const FriendsScreen = ({route, navigation}) => {
     const {groupName} = route.params;

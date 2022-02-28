@@ -1,0 +1,28 @@
+{
+    "cli": {
+      "version": ">= 0.34.0"
+    },
+    "build": {
+        "development": {
+          "developmentClient": true,
+          "distribution": "internal"
+        },
+        "preview": {
+          "distribution": "internal"
+        },
+        "production": {}
+      },
+    "submit": {
+      "production": {
+        "android": {
+          "track": "internal"
+        },
+        "ios": {
+          "appleId": "barhopdev@gmail.com",
+          "ascAppId": "1611641139",
+          "appleTeamId": "8YV3L7WK57"
+        }
+      }
+    }
+    
+  }

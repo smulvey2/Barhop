@@ -2,8 +2,6 @@ import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { auth, db } from '../firebase'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
-import { faCheck, faBan } from '@fortawesome/fontawesome-free-solid'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import firebase from 'firebase'
 
 const FriendRequests = ({navigation}) => {
@@ -119,10 +117,10 @@ useEffect(() => {
         <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})}  style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10, justifyContent: 'space-between'}}>
           <Text>{item.firstName} {item.lastName}</Text>
           <TouchableOpacity onPress={() => addFriend(item.key, item.firstName, item.lastName, item.photoURL)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
-          <FontAwesomeIcon icon = {faCheck}/>
+          <Ionicons name='checkmark-outline' size={20} color='black' />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => declineFriend(item.key)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
-          <FontAwesomeIcon icon = {faBan}/>
+          <Ionicons name='ban-outline' size={20} color='black' />
           </TouchableOpacity>
         </TouchableOpacity>
       )}
