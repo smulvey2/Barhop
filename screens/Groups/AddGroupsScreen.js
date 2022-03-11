@@ -3,6 +3,8 @@ import { View, Text, FlatList, Image } from 'react-native'
 import { auth, db } from '../../firebase'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Input } from 'react-native-elements'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
 
 
 const AddGroupsScreen = ({navigation}) => {
@@ -14,12 +16,16 @@ const [groupName, setGroupName] = useState('')
 
 const addToGroup = (item) => {
   group.push(item)
-  alert(JSON.stringify(group))
+  console.log(JSON.stringify(group))
 }
 
 const removeFromGroup = (uid) => {
-  const newList = group.filter(item => item.uid !== uid)
-  alert(JSON.stringify(newList))
+  var index = group.indexOf(uid)
+  const newList = []
+  newList = group
+  newList.splice(index, 1)
+  setGroup(newList)
+  console.log(newList)
 }
 
 const createGroup = () => {
@@ -91,12 +97,9 @@ return <ActivityIndicator />;
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10, justifyContent: 'space-between'}}>
               <Image source= {{uri: item.photoURL}} style={{height:25, width:25}}/>
-              <Text style={{paddingLeft: 20}}>{item.firstName} {item.lastName}</Text>
-              <TouchableOpacity onPress={() => addToGroup(item)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
-              <Ionicons name='add-circle-outline' size={20} color='black' />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => removeFromGroup(item.uid)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
-          <Ionicons name='remove-circle-outline' size={20} color='black' />
+              <Text style={{paddingLeft: 20, textAlign: 'left'}}>{item.firstName} {item.lastName}</Text>
+          <TouchableOpacity onPress={group.includes(item.uid) ? () => removeFromGroup(item.uid): () => addToGroup(item.uid)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
+          <Ionicons name={group.includes(item.uid) ? "radio-button-on-outline" : "radio-button-off-outline"} size={30}color={'#0992ed'} />
           </TouchableOpacity>
             </TouchableOpacity>
           )}

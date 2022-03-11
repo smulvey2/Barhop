@@ -57,16 +57,16 @@ const MyTab = ({navigation}) => {
 
             if (route.name === 'Home') {
               iconName = focused
-                ? 'home-outline'
+                ? 'home'
                 : 'home-outline';
             } else if (route.name === 'Profile') {
-              iconName = focused ? 'man-outline' : 'man-outline';
+              iconName = focused ? 'settings' : 'settings-outline';
             }
             else if (route.name === 'Friends') {
-              iconName = focused ? 'body-outline' : 'body-outline';
+              iconName = focused ? 'person' : 'person-outline';
             }
             else if (route.name === 'Groups') {
-              iconName = focused ? 'person-add-outline' : 'person-add-outline';
+              iconName = focused ? 'people' : 'people-outline';
             }
             
             // You can return any component that you like here!

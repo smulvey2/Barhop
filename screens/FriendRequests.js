@@ -3,6 +3,8 @@ import { View, Text, FlatList } from 'react-native'
 import { auth, db } from '../firebase'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
 import firebase from 'firebase'
+import Ionicons from 'react-native-vector-icons/Ionicons'  
+
 
 const FriendRequests = ({navigation}) => {
 
