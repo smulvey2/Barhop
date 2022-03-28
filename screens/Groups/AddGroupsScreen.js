@@ -1,10 +1,9 @@
 import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, FlatList, Image } from 'react-native'
 import { auth, db } from '../../firebase'
-import { TouchableOpacity, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
 
 
 const AddGroupsScreen = ({navigation}) => {
@@ -13,19 +12,24 @@ const [loading, setLoading] = useState(true); // Set loading to true on componen
 const [group, setGroup] = useState([]); // Initial empty array of users
 const [friends, setFriends] = useState([])
 const [groupName, setGroupName] = useState('')
+const [thing, setThing] = useState(false)
 
 const addToGroup = (item) => {
-  group.push(item)
-  console.log(JSON.stringify(group))
+  if(!group.includes(item)){
+  var tempGroup = group
+  tempGroup.push(item)
+  setGroup(tempGroup)
+  setThing(!thing)
+  }
 }
 
 const removeFromGroup = (uid) => {
   var index = group.indexOf(uid)
-  const newList = []
+  var newList = []
   newList = group
   newList.splice(index, 1)
   setGroup(newList)
-  console.log(newList)
+  setThing(!thing)
 }
 
 const createGroup = () => {
@@ -104,11 +108,24 @@ return <ActivityIndicator />;
             </TouchableOpacity>
           )}
         />
-        <TouchableOpacity onPress={() => createGroup()}>
-          <Text>Create</Text>
+        <TouchableOpacity onPress={() => createGroup()} style={styles.create}>
+          <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>Create</Text>
         </TouchableOpacity>
     </View>
   )
 }
 
 export default AddGroupsScreen
+
+const styles = StyleSheet.create({
+    create:{
+      alignItems: 'center',
+      borderColor: 'black',
+      borderRadius: 30,
+      borderWidth: 1,
+      justifyContent: 'center',
+      backgroundColor: '#0992ed',
+      padding: 10,
+      margin: 3
+    }
+})

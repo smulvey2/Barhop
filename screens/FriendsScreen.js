@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image} from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image, StyleSheet} from 'react-native'
 import { auth, db } from '../firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons'  
 
@@ -18,15 +18,15 @@ const FriendsScreen = ({navigation}) => {
     useEffect(() => {
         navigation.setOptions({   
             headerLeft: () => (
-                <TouchableOpacity style={{marginLeft: 20}}
-                onPress={()=>navigation.navigate('FriendRequests')}>
-                <Ionicons name='notifications-outline' size={20} color='black' />
+                <TouchableOpacity style={{marginLeft: 20, backgroundColor: 'black', padding: 5, borderRadius: 10}}
+                onPress={()=>navigation.navigate('Friend Requests')}>
+                <Ionicons name='notifications' size={20} color='white' />
                 </TouchableOpacity>
             ),
             headerRight: () => (
-                <TouchableOpacity style={{marginRight: 20}}
-                onPress={()=>navigation.navigate('AddFriends')}>
-                <Ionicons name='person-add-outline' size={20} color='black' />
+                <TouchableOpacity style={{marginRight: 20, backgroundColor: 'black', padding: 5, borderRadius: 10}}
+                onPress={()=>navigation.navigate('Add Friends')}>
+                <Ionicons name='person-add' size={20} color='white' />
                 </TouchableOpacity>
             )
         })
@@ -57,8 +57,9 @@ const FriendsScreen = ({navigation}) => {
       <View>
         <FlatList
           data={friends}
+          style={{paddingBottom: 300, paddingTop: 20,}}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10, justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={ styles.friends }>
               <Image source= {{uri: item.photoURL}} style={{height:25, width:25}}/>
               <Text style={{paddingLeft: 20}}>{item.firstName} {item.lastName}</Text>
               <TouchableOpacity onPress={() => switchVisible(item.uid, item.visible)}>
@@ -73,3 +74,25 @@ const FriendsScreen = ({navigation}) => {
 
 
 export default FriendsScreen
+
+const styles = StyleSheet.create({
+  friends: {
+    height: 50, 
+    flex: 1, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    borderColor: 'black', 
+    borderRadius: 5, 
+    borderWidth: 1, 
+    padding: 10, 
+    justifyContent: 'space-between', 
+    marginLeft: 10, 
+    marginRight: 10,
+    shadowOffset:{
+      width: 5,
+      height: 5
+    },
+    shadowOpacity: 0.4,
+    backgroundColor: 'white'
+  }
+})

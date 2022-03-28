@@ -30,9 +30,9 @@ const GroupScreen = ({ navigation }) => {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 20 }}
-          onPress={() => navigation.navigate('Add Groups')}>
-          <Ionicons name='add-circle-outline' size={20} color='black' />
+        <TouchableOpacity style={{marginRight: 20, backgroundColor: 'black', padding: 5, borderRadius: 10}}
+          onPress={() => navigation.navigate('New Group')}>
+          <Ionicons name='add-circle' size={20} color='white' />
         </TouchableOpacity>
       )
     })

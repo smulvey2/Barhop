@@ -16,13 +16,12 @@ const screenOptionStyle = {
 }
 const FriendsStack = ()=> {
     return(
-<Stack.Navigator
-screenOptions ={{headerShown: true}}>
+<Stack.Navigator screenOptions ={{headerShown: true, headerStyle:{backgroundColor: '#0992ed'}}}>
 
-<Stack.Screen name = "Friends" component={FriendsScreen} screenOptions={{headerShown:false}}/>
-<Stack.Screen name = "AddFriends" component={AddFriendsScreen} />
-<Stack.Screen name = "FriendRequests" component={FriendRequests} />
-<Stack.Screen name = "FriendInfo" component={FriendInfo} />
+<Stack.Screen name = "Friends" component={FriendsScreen} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
+<Stack.Screen name = "Add Friends" component={AddFriendsScreen} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
+<Stack.Screen name = "Friend Requests" component={FriendRequests} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
+<Stack.Screen name = "Friend Info" component={FriendInfo} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
 
 </Stack.Navigator>
 
@@ -31,11 +30,11 @@ screenOptions ={{headerShown: true}}>
 
 const GroupStack = () => {
     return(
-        <Stack.Navigator>
-        <Stack.Screen name = "GroupsHome" component={GroupScreen}/>
-        <Stack.Screen name = "Add Groups" component={AddGroupsScreen}/>
-        <Stack.Screen name = "FriendInfo" component={FriendInfo}/>
-        <Stack.Screen name = "GroupInfo" component={GroupInfo}/>
+        <Stack.Navigator screenOptions ={{headerShown: true, headerStyle:{backgroundColor: '#0992ed'}}}>
+        <Stack.Screen name = "Groups" component={GroupScreen} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white', }, headerTintColor: 'white'}}/>
+        <Stack.Screen name = "New Group" component={AddGroupsScreen}/>
+        <Stack.Screen name = "Friend Info" component={FriendInfo}/>
+        <Stack.Screen name = "Group" component={GroupInfo}/>
         </Stack.Navigator>
     )}
 const HomeStack = () => {
