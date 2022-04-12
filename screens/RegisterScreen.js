@@ -2,8 +2,9 @@ import React, {useState, useRef} from 'react'
 import { View, Text, StyleSheet, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { Input, Button } from 'react-native-elements'
 import { auth, db } from '../firebase'
-import InputScrollView from 'react-native-input-scroll-view';
+import { getAuth, RecaptchaVerifier } from "firebase/auth";
 import { KeyboardAvoidingView } from 'react-native';
+
 
 const RegisterScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
@@ -17,7 +18,7 @@ const RegisterScreen = ({navigation}) => {
     const firstNameRef = useRef()
     const lastNameRef = useRef()
 
-    const register = () => {
+    const register = ({navigation}) => {
         auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             var user = userCredential.user;
@@ -47,11 +48,6 @@ const RegisterScreen = ({navigation}) => {
         navigation.popToTop()
     }
     return (
-        <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={{ flex: 1 }}
-            >
-                <SafeAreaView style={styles.container}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.inner}>
             <Input
@@ -99,12 +95,12 @@ const RegisterScreen = ({navigation}) => {
             ref={lastNameRef}
             onSubmitEditing={register}
             />
+            <Button title="Next" style ={styles.button} onPress={() => navigation.navigate('RegisterPhoneScreen')}/>
             <Button title="Sign Up" style ={styles.button} onPress={register}/>
             <View style={{ flex : 1 }} />
             </View>
                     </TouchableWithoutFeedback>
-                </SafeAreaView>
-            </KeyboardAvoidingView>
+
     )
 }
 

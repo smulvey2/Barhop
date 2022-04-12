@@ -1,18 +1,39 @@
 import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, FlatList, Image } from 'react-native'
 import { auth, db } from '../../firebase'
-import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native'
-import { Input } from 'react-native-elements'
+import { TouchableOpacity, ActivityIndicator, StyleSheet, TextInput, Modal, Keyboard} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import styles from '../../styles/styles'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+
+header: ({ navigation, route, options, back }) => {
+  const title = 'Title Here Please';
+
+  return (
+    <MyHeader
+      title={title}
+      leftButton={
+        back ? <MyBackButton onPress={navigation.goBack} /> : undefined
+      }
+      style={options.headerStyle}
+    />
+  );
+};
 
 
 const AddGroupsScreen = ({navigation}) => {
+
+  
 
 const [loading, setLoading] = useState(true); // Set loading to true on component mount
 const [group, setGroup] = useState([]); // Initial empty array of users
 const [friends, setFriends] = useState([])
 const [groupName, setGroupName] = useState('')
 const [thing, setThing] = useState(false)
+const [added, setAdded] = useState(false)
+const [input, setInput] = useState(false)
 
 const addToGroup = (item) => {
   if(!group.includes(item)){
@@ -63,6 +84,9 @@ navigation.popToTop()
 }
 
 useEffect(() => { 
+  navigation.setOptions({
+    headerTitle: TitleComponent
+  })
   const subscriber = db.collection('users').doc(auth?.currentUser?.uid).collection('friends').orderBy('firstName')
   .onSnapshot(querySnapshot => {
     const friends = [];
@@ -86,29 +110,40 @@ if (loading) {
 return <ActivityIndicator />;
 }
 
-
   return (
+    
     <View>
-            <Input
-            placeholder = "Enter a group name"
-            label = "Group Name"
-            leftIcon = {{type:'material', name:'group'}}
-            value = {groupName}
-            onChangeText = {text=> setGroupName(text)}
-            />
+      {/* <View style={{height: 60, backgroundColor: '#0992ed', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', alignContent: 'space-between'}}>
+        <TouchableOpacity style={{width: 30, height: 30, justifyContent: 'center', backgroundColor: 'black', borderRadius: 10, position: 'absolute', left: 15}}>
+          <Text style={{color: 'white', textAlign: 'center', fontSize: 20}}>X</Text>
+        </TouchableOpacity>
+        <TextInput
+      style={{textAlign: 'center', width: '50%', borderWidth: 0, fontSize: 20, position: 'absolute'}}
+      placeholder = "New Group"
+      placeholderTextColor={'white'}
+      value = {groupName}
+      onChangeText = {text=> setGroupName(text)}
+      />
+      <TouchableOpacity style={group.length != 0 ? styles.createActive : styles.createInactive} disabled={group.length == 0}>
+        <Text style={{color: group.length != 0 ? 'white' : 'black', textAlign: 'center'}}>Create</Text>
+      </TouchableOpacity>
+
+      </View> */}
+
             <FlatList
           data={friends}
+          style={styles.list}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10, justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={() => navigation.navigate('Friend Info', {uid: item.key})} style={styles.friends}>
               <Image source= {{uri: item.photoURL}} style={{height:25, width:25}}/>
-              <Text style={{paddingLeft: 20, textAlign: 'left'}}>{item.firstName} {item.lastName}</Text>
+              <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
           <TouchableOpacity onPress={group.includes(item.uid) ? () => removeFromGroup(item.uid): () => addToGroup(item.uid)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
           <Ionicons name={group.includes(item.uid) ? "radio-button-on-outline" : "radio-button-off-outline"} size={30}color={'#0992ed'} />
           </TouchableOpacity>
             </TouchableOpacity>
           )}
         />
-        <TouchableOpacity onPress={() => createGroup()} style={styles.create}>
+        <TouchableOpacity onPress={() => createGroup()} style={stylee.create}>
           <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>Create</Text>
         </TouchableOpacity>
     </View>
@@ -117,7 +152,26 @@ return <ActivityIndicator />;
 
 export default AddGroupsScreen
 
-const styles = StyleSheet.create({
+const TitleComponent = () => {
+const [active, setActive] = useState(false)
+  
+    return (
+      <TextInput
+        style={{
+          fontFamily: 'ChalkboardSE-Bold',
+        }}
+        placeholder="Name your Group"
+        placeholderTextColor={'white'}
+        selectionColor={'white'}
+        color={'white'}
+        fontSize={18}
+      />
+    );
+  
+
+};
+
+const stylee = StyleSheet.create({
     create:{
       alignItems: 'center',
       borderColor: 'black',

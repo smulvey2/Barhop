@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image} from 'react-native'
 import { auth, db } from '../../firebase'
+import styles from '../../styles/styles'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
 
 
 const FriendsScreen = ({route, navigation}) => {
@@ -37,10 +40,14 @@ const FriendsScreen = ({route, navigation}) => {
       <View>
         <FlatList
           data={friends}
+          style={styles.list}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10}}>
+            <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={styles.friends}>
               <Image source= {{uri: item.photoURL}} style={{height:25, width:25}}/>
-              <Text style={{paddingLeft: 20}}>{item.firstName} {item.lastName}</Text>
+              <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
+              <TouchableOpacity onPress={friends.includes(() => removeFromGroup(item.uid))} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
+              <Ionicons name={"remove-circle-outline"} size={30}color={'#0992ed'} />
+              </TouchableOpacity>
             </TouchableOpacity>
           )}
         />

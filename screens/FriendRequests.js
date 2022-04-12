@@ -2,8 +2,9 @@ import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { auth, db } from '../firebase'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
-import firebase from 'firebase'
+import firebase from '../firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons'  
+import styles from '../styles/styles'
 
 
 const FriendRequests = ({navigation}) => {
@@ -115,9 +116,10 @@ useEffect(() => {
   return (
     <FlatList
       data={requests}
+      style={styles.list}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})}  style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10, justifyContent: 'space-between'}}>
-          <Text>{item.firstName} {item.lastName}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})}  style={styles.friends}>
+          <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
           <TouchableOpacity onPress={() => addFriend(item.key, item.firstName, item.lastName, item.photoURL)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
           <Ionicons name='checkmark-outline' size={20} color='black' />
           </TouchableOpacity>

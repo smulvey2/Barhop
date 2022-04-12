@@ -25,11 +25,11 @@ const MyTab = ({navigation}) => {
     const screenOptionStyle = { 
         headerShown: true,
         headerStyle: {
-            backgroundColor: '#0992ed'
+            backgroundColor: '#0992ed',
         },
         headerTintColor: 'white',
         headerTitleStyle:{
-            fontWeight: 'bold'
+            fontWeight: 'bold',
         },
         headerLeft: () => (
             <View style={{marginLeft: 20}}>
@@ -74,10 +74,11 @@ const MyTab = ({navigation}) => {
           },
           tabBarActiveTintColor: '#0992ed',
           tabBarInactiveTintColor: 'gray',
+          headerTintColor: 'white'
         })}
       >
             <Tab.Screen name ="Home" component = {HomeStack}/>
-            <Tab.Screen screenOptions={{headerShown:true, headerStyle:{screenOptionStyle}}} name ="Friends" component = {FriendsStack}/>
+            <Tab.Screen screenOptions={{headerShown:true, headerStyle:{screenOptionStyle}, headerTintColor: 'white'}} name ="Friends" component = {FriendsStack}/>
             <Tab.Screen screenOptions={{headerShown:true, headerStyle:{screenOptionStyle}}} name ="Groups" component = {GroupStack}/>
             <Tab.Screen screenOptions={{headerShown:true, headerStyle:{screenOptionStyle}}} name = "Profile" component={ProfileStack}/>
         </Tab.Navigator>

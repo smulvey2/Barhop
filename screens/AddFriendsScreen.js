@@ -5,6 +5,7 @@ import { TouchableOpacity, ActivityIndicator } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'  
 import FriendsScreen from './FriendsScreen'
 import { AnimatedRegion } from 'react-native-maps'
+import styles from '../styles/styles'
 
 
 const AddFriendsScreen = ({navigation}) => {
@@ -112,9 +113,10 @@ useEffect(() => {
   return (
     <FlatList
       data={users}
+      style={styles.list}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10, justifyContent: 'space-between'}}>
-          <Text style={{fontSize: 20}}>{item.firstName} {item.lastName}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={styles.friends}>
+          <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
           <TouchableOpacity onPress={friends.includes(item.key) ? () => navigation.navigate('FriendInfo', {uid: item.key}) : requests.includes(item.key) ?  () => removeRequest(item) : () => sendRequest(item)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
           <Ionicons name= {friends.includes(item.key) ? "checkmark-circle-outline" : requests.includes(item.key) ? "remove-circle-outline" : "add-circle-outline"} size={30}></Ionicons>
           </TouchableOpacity>

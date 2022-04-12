@@ -9,6 +9,7 @@ import FriendInfo from '../screens/FriendInfo'
 import GroupScreen from '../screens/Groups/GroupScreen'
 import AddGroupsScreen from '../screens/Groups/AddGroupsScreen'
 import GroupInfo from '../screens/Groups/GroupInfo'
+import styles from '../styles/styles'
 
 const Stack = createStackNavigator()
 const screenOptionStyle = {
@@ -16,12 +17,12 @@ const screenOptionStyle = {
 }
 const FriendsStack = ()=> {
     return(
-<Stack.Navigator screenOptions ={{headerShown: true, headerStyle:{backgroundColor: '#0992ed'}}}>
+<Stack.Navigator screenOptions ={{headerShown: true, headerStyle:{backgroundColor: '#0992ed'}, headerTintColor: 'white'}}>
 
-<Stack.Screen name = "Friends" component={FriendsScreen} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
-<Stack.Screen name = "Add Friends" component={AddFriendsScreen} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
-<Stack.Screen name = "Friend Requests" component={FriendRequests} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
-<Stack.Screen name = "Friend Info" component={FriendInfo} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white'}}}/>
+<Stack.Screen name = "Friends" component={FriendsScreen} options={{headerTitleStyle: styles.headerTitle}}/>
+<Stack.Screen name = "Add Friends" component={AddFriendsScreen} options={{headerTitleStyle: styles.headerTitle}}/>
+<Stack.Screen name = "Friend Requests" component={FriendRequests} options={{headerTitleStyle: styles.headerTitle}}/>
+<Stack.Screen name = "Friend Info" component={FriendInfo} options={{headerTitleStyle: styles.headerTitle}}/>
 
 </Stack.Navigator>
 
@@ -30,11 +31,11 @@ const FriendsStack = ()=> {
 
 const GroupStack = () => {
     return(
-        <Stack.Navigator screenOptions ={{headerShown: true, headerStyle:{backgroundColor: '#0992ed'}}}>
-        <Stack.Screen name = "Groups" component={GroupScreen} options={{headerTitleStyle: {fontWeight: 'bold', color: 'white', }, headerTintColor: 'white'}}/>
-        <Stack.Screen name = "New Group" component={AddGroupsScreen}/>
-        <Stack.Screen name = "Friend Info" component={FriendInfo}/>
-        <Stack.Screen name = "Group" component={GroupInfo}/>
+        <Stack.Navigator screenOptions ={{headerShown: true, headerStyle:{backgroundColor: '#0992ed'}, headerTintColor: 'white', headerTitleStyle:{fontFamily: 'ChalkboardSE-Bold'}}}>
+        <Stack.Screen name = "Groups" component={GroupScreen} options={{headerTitleStyle: styles.headerTitle}}/>
+        <Stack.Screen name = "New Group" component={AddGroupsScreen} options={{headerTitleStyle: styles.headerTitle}}/>
+        <Stack.Screen name = "Friend Info" component={FriendInfo} options={{headerTitleStyle: styles.headerTitle}}/>
+        <Stack.Screen name = "Group" component={GroupInfo} options={{headerTitleStyle: styles.headerTitle}}/>
         </Stack.Navigator>
     )}
 const HomeStack = () => {
@@ -49,8 +50,8 @@ const HomeStack = () => {
 const ProfileStack = () => {
     return(
         <Stack.Navigator
-        screenOptions ={screenOptionStyle}>
-            <Stack.Screen name = "ProfileScreen" component={ProfileScreen}/>
+        screenOptions ={{headerShown: true, headerStyle:{backgroundColor: '#0992ed'}, headerTintColor: 'white', fontFamily: 'ChalkboardSE-Bold', headerTitleStyle:{fontFamily: 'ChalkboardSE-Bold'}}}>
+            <Stack.Screen name = "Profile" component={ProfileScreen} options={{headerTitleStyle: styles.headerTitle}}/>
         </Stack.Navigator>
     )}
 

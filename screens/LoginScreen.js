@@ -38,7 +38,6 @@ const LoginScreen = ({navigation}) => {
         <View style = {styles.container}>
             <Input
             placeholder = "Enter your email"
-            label = "Email"
             leftIcon = {{type:'material', name:'email'}}
             value = {email}
             onChangeText = {text=> setEmail(text)}
@@ -46,7 +45,6 @@ const LoginScreen = ({navigation}) => {
             />
             <Input
             placeholder = "Enter your password"
-            label = "Password"
             leftIcon = {{type:'material', name:'lock'}}
             value = {password}
             ref = {passwordRef}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
 import { auth, db } from '../../firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import styles from '../../styles/styles'
 
 
 const GroupScreen = ({ navigation }) => {
@@ -62,9 +63,10 @@ const GroupScreen = ({ navigation }) => {
   return (
     <FlatList
       data={groups}
+      style={styles.list}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('GroupInfo', { groupName: item.key })} style={{ height: 50, flex: 1, flexDirection: 'row', alignItems: 'center', borderColor: 'black', borderRadius: 5, borderWidth: 1, padding: 10, justifyContent: 'space-between' }}>
-          <Text>{item.key}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Group', { groupName: item.key })} style={styles.friends}>
+          <Text style={styles.listsTextBlack}>{item.key}</Text>
           <TouchableOpacity onPress={() => switchVisible(item.groupName, item.visible)}>
             <Ionicons name={item.visible ? "radio-button-on-outline" : "radio-button-off-outline"} size={30} color={'#0992ed'} />
           </TouchableOpacity>

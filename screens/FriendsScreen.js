@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image, StyleSheet} from 'react-native'
 import { auth, db } from '../firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons'  
+import styles from '../styles/styles'
 
 const FriendsScreen = ({navigation}) => {
 
@@ -57,11 +58,11 @@ const FriendsScreen = ({navigation}) => {
       <View>
         <FlatList
           data={friends}
-          style={{paddingBottom: 300, paddingTop: 20,}}
+          style={styles.list}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={ styles.friends }>
+            <TouchableOpacity onPress={() => navigation.navigate('Friend Info', {uid: item.key})} style={ styles.friends }>
               <Image source= {{uri: item.photoURL}} style={{height:25, width:25}}/>
-              <Text style={{paddingLeft: 20}}>{item.firstName} {item.lastName}</Text>
+              <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
               <TouchableOpacity onPress={() => switchVisible(item.uid, item.visible)}>
               <Ionicons name={item.visible ? "radio-button-on-outline" : "radio-button-off-outline"} size={30}color={'#0992ed'} />
               </TouchableOpacity>
@@ -74,25 +75,3 @@ const FriendsScreen = ({navigation}) => {
 
 
 export default FriendsScreen
-
-const styles = StyleSheet.create({
-  friends: {
-    height: 50, 
-    flex: 1, 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    borderColor: 'black', 
-    borderRadius: 5, 
-    borderWidth: 1, 
-    padding: 10, 
-    justifyContent: 'space-between', 
-    marginLeft: 10, 
-    marginRight: 10,
-    shadowOffset:{
-      width: 5,
-      height: 5
-    },
-    shadowOpacity: 0.4,
-    backgroundColor: 'white'
-  }
-})
