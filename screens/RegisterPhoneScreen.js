@@ -11,11 +11,6 @@ const RegisterPhoneScreen = ({navigation}) => {
     const [phoneNumber, setPhoneNumber] = useState('');
 
 
-const testMethod = () => {
-    console.log('actually hits')
-}
-
-
 // window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
 //   'size': 'invisible',
 //   'callback': (response) => {
