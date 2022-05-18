@@ -2,13 +2,14 @@ import React, {useEffect, useRef, useState} from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Input, Button } from 'react-native-elements'
 import { auth } from '../firebase'
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const passwordRef = useRef()
     const signIn = () => {
-        auth.signInWithEmailAndPassword(email,password)
+        signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             var user = userCredential.user;
         })

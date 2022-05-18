@@ -6,6 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import FriendsScreen from './FriendsScreen'
 import { AnimatedRegion } from 'react-native-maps'
 import styles from '../styles/styles'
+import { collection, query, setDoc, doc, updateDoc, onSnapshot, getDoc, orderBy, deleteDoc } from "firebase/firestore";
+
 
 
 const AddFriendsScreen = ({navigation}) => {
@@ -14,18 +16,16 @@ const [loading, setLoading] = useState(true); // Set loading to true on componen
 const [users, setUsers] = useState([]); // Initial empty array of users
 const [firstName, setFirstName] = useState('')
 const [lastName, setLastName] = useState('')
-const [photoURL, setPhotoURL] = useState('')
 const [friends, setFriends] = useState([])
 const [requests, setRequests] = useState([])
 
 const sendRequest = (item) => {
-  db.collection("users").doc(item.key).collection('friendRequests').doc(auth?.currentUser?.uid).set({
+  setDoc(doc(db, 'users', item.key, 'friendRequests', auth.currentUser.uid.toString()), {
     firstName: firstName,
     lastName: lastName,
     uid: auth.currentUser.uid,
-    photoURL: photoURL
 })
-db.collection("users").doc(auth?.currentUser?.uid).collection('sentRequests').doc(item.key).set({
+setDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'sentRequests', item.key), {
   firstName: item.firstName,
   lastName: item.lastName,
   uid: item.key,
@@ -34,75 +34,67 @@ db.collection("users").doc(auth?.currentUser?.uid).collection('sentRequests').do
 }
 
 const removeRequest = (item) => {
-  db.collection("users").doc(item.uid).collection('friendRequests').doc(auth?.currentUser?.uid).delete()
-  db.collection("users").doc(auth?.currentUser?.uid).collection('sentRequests').doc(item.key).delete()
+  deleteDoc(doc(db, 'users', item.key, 'friendRequests', auth.currentUser.uid.toString()))
+  deleteDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'sentRequests', item.key))
 }
 
 useEffect(() => { 
-    const subscriber = db.collection('users').orderBy('firstName')
-      .onSnapshot(querySnapshot => {
-        const users = [];
-
-      querySnapshot.forEach(documentSnapshot => {
-        if(documentSnapshot.id != auth.currentUser.uid){
-        users.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-        });
-      }
-      else {
-        setFirstName(documentSnapshot.data().firstName)
-        setLastName(documentSnapshot.data().lastName)
-        setPhotoURL(documentSnapshot.data().photoURL)
-      }
-      })
-      
-      setUsers(users)
-      setLoading(false)        
-
-    })   
-
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
+  (async () => {
+    const r = collection(db, 'users')
+    const q = query(r, orderBy('firstName'))
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const friends = [];
+    querySnapshot.forEach((doc) => {
+      if(doc.id != auth.currentUser.uid){
+      friends.push({
+        ...doc.data(),
+        key: doc.id,
+      });
+    }
+    else{
+      setFirstName(doc.data().firstName)
+      setLastName(doc.data().lastName)
+    }
+    })
+    setUsers(friends)
+    setLoading(false)
+  })
+  return () => unsubscribe();
+  })(); 
   }, []);
 
   useEffect(() => { 
-    const subscriber = db.collection('users').doc(auth?.currentUser?.uid).collection('friends')
-      .onSnapshot(querySnapshot => {
-        const friends = [];
-
-      querySnapshot.forEach(documentSnapshot => {
+    (async () => {
+      const r = collection(db, 'users', auth.currentUser.uid.toString(), 'friends')
+      const q = query(r, orderBy('firstName'))
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const friends = [];
+      querySnapshot.forEach((doc) => {
         friends.push(
-          documentSnapshot.id,
+          doc.id
         );
       })
-      
       setFriends(friends)
-      setLoading(false)        
-
-    })   
-
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
+    })
+    return () => unsubscribe();
+    })();
   }, []);
 
   useEffect(() => { 
-    const subscriber = db.collection('users').doc(auth?.currentUser?.uid).collection('sentRequests')
-      .onSnapshot(querySnapshot => {
-        const requests = [];
-
-      querySnapshot.forEach(documentSnapshot => {
-        requests.push(
-          documentSnapshot.id
-        );
+      (async () => {
+        const r = collection(db, 'users', auth.currentUser.uid.toString(), 'sentRequests')
+        const q = query(r, orderBy('firstName'))
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const friends = [];
+        querySnapshot.forEach((doc) => {
+          friends.push(
+                doc.id
+          );
+        })
+        setRequests(friends)
       })
-      
-      setRequests(requests)
-      setLoading(false)        
-    })   
-
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
+      return () => unsubscribe();
+      })();
   }, []);
 
   if (loading) {
@@ -114,10 +106,11 @@ useEffect(() => {
     <FlatList
       data={users}
       style={styles.list}
+      contentContainerStyle={{ paddingBottom: 20 }}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})} style={styles.friends}>
+        <TouchableOpacity onPress={() => navigation.navigate('Friend Info', {uid: item.key})} style={styles.friends}>
           <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
-          <TouchableOpacity onPress={friends.includes(item.key) ? () => navigation.navigate('FriendInfo', {uid: item.key}) : requests.includes(item.key) ?  () => removeRequest(item) : () => sendRequest(item)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
+          <TouchableOpacity onPress={friends.includes(item.key) ? () => navigation.navigate('Friend Info', {uid: item.key}) : requests.includes(item.key) ?  () => removeRequest(item) : () => sendRequest(item)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
           <Ionicons name= {friends.includes(item.key) ? "checkmark-circle-outline" : requests.includes(item.key) ? "remove-circle-outline" : "add-circle-outline"} size={30}></Ionicons>
           </TouchableOpacity>
         </TouchableOpacity>

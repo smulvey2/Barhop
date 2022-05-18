@@ -22,8 +22,8 @@ export default StyleSheet.create({
     right: 15
   },
   list:{
-    paddingTop: 20,
-    paddingBottom: 300
+    paddingTop: 10,
+    paddingBottom: 300,
   },
   container: {
     padding: 10,

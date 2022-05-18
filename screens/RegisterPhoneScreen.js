@@ -1,8 +1,7 @@
 import PhoneInput from 'react-native-phone-number-input'
 import React, {useState, useRef} from 'react'
-import { View, Text, StyleSheet, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import { Input, Button } from 'react-native-elements'
-import { auth, db } from '../firebase'
+import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import { auth, db} from '../firebase'
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { KeyboardAvoidingView } from 'react-native';
 
@@ -11,8 +10,39 @@ const RegisterPhoneScreen = ({navigation}) => {
     const [value, setValue] = useState()
     const [phoneNumber, setPhoneNumber] = useState('');
 
+
+const testMethod = () => {
+    console.log('actually hits')
+}
+
+
+// window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
+//   'size': 'invisible',
+//   'callback': (response) => {
+//     // reCAPTCHA solved, allow signInWithPhoneNumber.
+//     onSignInSubmit();
+//   }
+// }, auth);
+
+const sendVerification = () => {
+    console.log(phoneNumber)
+    const appVerifier = window.recaptchaVerifier;
+
+signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+    .then((confirmationResult) => {
+        console.log('hits')
+      // SMS sent. Prompt user to type the code from the message, then sign the
+      // user in with confirmationResult.confirm(code).
+      window.confirmationResult = confirmationResult;
+      // ...
+    }).catch((error) => {
+      // Error; SMS not sent
+      // ...
+    });
+}
+
     return (
-        <View>
+        <View style={{alignItems: 'center', paddingTop: 20}}>
             <PhoneInput defaultCode="US"
              defaultValue={value}
              layout="first"
@@ -22,6 +52,9 @@ const RegisterPhoneScreen = ({navigation}) => {
              withDarkTheme
              withShadow
              autoFocus/>
+             <TouchableOpacity onPress={sendVerification} style={styles.button}>
+             <Text>Send Verification</Text>
+             </TouchableOpacity>
         </View>
     )
 }
@@ -30,8 +63,10 @@ export default RegisterPhoneScreen
 
 const styles = StyleSheet.create({
 button:{
+    backgroundColor: 'green',
     width:200,
     marginTop: 10,
+    height: 75,
     alignContent:'center',
     justifyContent: 'center'
 },

@@ -1,10 +1,13 @@
 import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { auth, db } from '../firebase'
+import 'firebase/firestore'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
 import firebase from '../firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons'  
 import styles from '../styles/styles'
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy, deleteDoc, onSnapshot } from "firebase/firestore";
+
 
 
 const FriendRequests = ({navigation}) => {
@@ -16,12 +19,11 @@ const [thisLast, setThisLast] = useState('')
 const [thisUrl, setThisUrl] = useState('')
 
 const addFriend = (uid, firstName, lastName, url) => {
-  db.collection("users").doc(auth?.currentUser?.uid).collection('friends').doc(uid).set({
-    firstName: firstName,
-    lastName: lastName,
-    uid: uid,
-    photoURL: url,
-    visible: true
+setDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'friends', uid), {
+  firstName: firstName,
+  lastName: lastName,
+  uid: uid,
+  visible: true
 })
 .then(() => {
     console.log("Document successfully written!");
@@ -29,7 +31,7 @@ const addFriend = (uid, firstName, lastName, url) => {
 .catch((error) => {
     console.error("Error writing document: ", error);
 });
-db.collection('users').doc(auth?.currentUser?.uid).collection('friendRequests').doc(uid).delete()
+deleteDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'friendRequests', uid))
 .then(() => {
     console.log("Document successfully deleted!");
 })
@@ -37,11 +39,10 @@ db.collection('users').doc(auth?.currentUser?.uid).collection('friendRequests').
     console.error("Error deleting document: ", error);
 });
 
-db.collection("users").doc(uid).collection('friends').doc(auth?.currentUser?.uid).set({
+setDoc(doc(db, 'users', uid, 'friends', auth.currentUser.uid.toString()), {
   firstName: thisFirst,
   lastName: thisLast,
   uid: auth?.currentUser?.uid,
-  photoURL: thisUrl,
   visible: true
 })
 .then(() => {
@@ -50,16 +51,16 @@ db.collection("users").doc(uid).collection('friends').doc(auth?.currentUser?.uid
 .catch((error) => {
   console.error("Error writing document: ", error);
 });
-db.collection('users').doc(auth?.currentUser?.uid).update({
-  totalFriends: firebase.firestore.FieldValue.increment(1)
-})
-db.collection('users').doc(uid).update({
-  totalFriends: firebase.firestore.FieldValue.increment(1)
-})
+// updateDoc(doc(db, 'users', auth.currentUser.uid.toString()), {
+//   totalFriends: firebase.firestore.FieldValue.increment(1)
+// })
+// updateDoc(doc(db, 'users', uid), {
+//   totalFriends: firebase.firestore.FieldValue.increment(1)
+// })
 }
 
 const declineFriend = (uid) => {
-  db.collection('users').doc(auth?.currentUser?.uid).collection('friendRequests').doc(uid).delete()
+  deleteDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'friendRequests', uid))
   .then(() => {
       console.log("Document successfully deleted!");
   })
@@ -70,61 +71,41 @@ const declineFriend = (uid) => {
 
 useEffect(() => {
 
-  db.collection('users').doc(auth?.currentUser?.uid).get().then(function(doc) {
-    if (doc.exists) {
-        setThisFirst(doc.data().firstName);
-        setThisLast(doc.data().lastName);
-        setThisUrl(doc.data().photoURL)
-    } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-    }
-}).catch(function(error) {
-    console.log("Error getting document:", error);
-});
-    
-
-
-    const subscriber = db.collection('users').doc(auth?.currentUser?.uid).collection('friendRequests').orderBy('firstName')
-      .onSnapshot(querySnapshot => {
-        const requests = [];
-
-      querySnapshot.forEach(documentSnapshot => {
-        requests.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-        });
+  (async () => {
+    const r = collection(db, 'users', auth.currentUser.uid.toString(), 'friendRequests')
+    const q = query(r, orderBy('firstName'))
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const friends = [];
+    querySnapshot.forEach((doc) => {
+      friends.push({
+        ...doc.data(),
+        key: doc.id,
       });
-
-      setRequests(requests)
-      setLoading(false)        
-
     })
+    setRequests(friends)
+    setLoading(false)
+  })
+  return () => unsubscribe();
+  })();
 
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
   }, []);
 
   if (loading) {
     return <ActivityIndicator />;
   }
 
-  
-
-
-
-  return (
+    return (
     <FlatList
       data={requests}
       style={styles.list}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('FriendInfo', {uid: item.key})}  style={styles.friends}>
+        <TouchableOpacity onPress={() => navigation.navigate('Friend Info', {uid: item.key})}  style={styles.friends}>
           <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
           <TouchableOpacity onPress={() => addFriend(item.key, item.firstName, item.lastName, item.photoURL)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
           <Ionicons name='checkmark-outline' size={20} color='black' />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => declineFriend(item.key)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
-          <Ionicons name='ban-outline' size={20} color='black' />
+          <Ionicons name='close-circle-outline' size={20} color='black' />
           </TouchableOpacity>
         </TouchableOpacity>
       )}

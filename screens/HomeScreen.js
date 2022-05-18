@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState, useEffect, useCallback, Component } from 'react'
 import { View, Text, ActivityIndicator, Modal, StyleSheet, TouchableOpacity, Animated, TextInput, Button, Keyboard, TouchableWithoutFeedback, FlatList, KeyboardAvoidingView } from 'react-native'
-import { auth, db, firebase } from '../firebase'
+import { auth, db } from '../firebase'
 import { AntDesign } from '@expo/vector-icons'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -9,6 +9,7 @@ import { getDistance, isPointWithinRadius } from 'geolib';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { ScrollView } from 'react-native-virtualized-view';
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy } from "firebase/firestore";
 
 const HomeScreen = ({ navigation }) => {
   const [name, setName] = useState('')
@@ -305,10 +306,9 @@ const HomeScreen = ({ navigation }) => {
     if(bars[index].reviews != null){
     tempList = bars[index].reviews
     }
-    let tempReview = {user: name + " " + lastName, review: review, date: 'Just Now', uid: auth.currentUser.uid}
+    let tempReview = {user: name + " " + lastName, review: review, date: 'Now', uid: auth.currentUser.uid}
     tempList.push(tempReview)
     var tempBars = bars
-    console.log(tempBars[index])
     tempBars[index].reviews = tempList
     setBars(tempBars)
     fetch("http://" + ip + ":3000/api/writeReview/" + id + ", " + name + " " + lastName + ", " + auth.currentUser.uid + "un1qu3spl1tt3rk3y" + review)
@@ -327,7 +327,7 @@ const HomeScreen = ({ navigation }) => {
     if (currentBar != null) {
       fetch("http://" + ip + ":3000/api/removeBarUser/" + BigInt(currentBar) + ", " + auth.currentUser.uid)
     }
-    db.collection('users').doc(auth.currentUser.uid).set({
+    setDoc(doc(db, 'users', auth.currentUser.uid.toString()), {
       currentBar: id
     },
       { merge: true })
@@ -337,7 +337,7 @@ const HomeScreen = ({ navigation }) => {
   //called when user checks out of bar
   const checkOut = () => {
     fetch("http://" + ip + ":3000/api/removeBarUser/" + id + ", " + auth.currentUser.uid)
-    db.collection('users').doc(auth.currentUser.uid).set({
+    setDoc(doc(db, 'users', auth.currentUser.uid.toString()), {
       currentBar: null
     },
       { merge: true })
@@ -353,7 +353,6 @@ const HomeScreen = ({ navigation }) => {
 
   //called when bars is changed, checks for friends at bars
   useEffect(() => {
-    console.log('hits')
     if (bars.length > 0) {
       let tempBars = bars;
       tempBars.forEach(bar => {
@@ -384,7 +383,6 @@ const HomeScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-
     //checks user location permissions
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -394,38 +392,36 @@ const HomeScreen = ({ navigation }) => {
       }
 
       //checks user info from firebase
-      await db.collection('users').doc(auth?.currentUser?.uid).get().then(function (doc) {
-        if (doc.exists) {
-          setName(doc.data().firstName);
-          setLastName(doc.data().lastName)
-          if (doc.data().latitude != undefined && doc.data().longitude != undefined) {
-            setLatitude(doc.data().latitude)
-            setLongitude(doc.data().longitude)
-            setMapLatitude(doc.data().latitude)
-            setMapLongitude(doc.data().longitude)
-            setCurrentBar(doc.data().currentBar)
+        const docRef = doc(db, 'users', auth.currentUser.uid.toString())
+        const docQuery = await getDoc(docRef)
+        if (docQuery.exists()) {
+          setName(docQuery.data().firstName);
+          setLastName(docQuery.data().lastName)
+          if (docQuery.data().latitude != undefined && docQuery.data().longitude != undefined) {
+            setLatitude(docQuery.data().latitude)
+            setLongitude(docQuery.data().longitude)
+            setMapLatitude(docQuery.data().latitude)
+            setMapLongitude(docQuery.data().longitude)
+            setCurrentBar(docQuery.data().currentBar)
             if (!markersSet) {
-              getBars(doc.data().latitude, doc.data().longitude)
+              getBars(docQuery.data().latitude, docQuery.data().longitude)
               markersSet = true;
             }
           }
         } else {
           console.log("No such document!");
         }
-      }).catch(function (error) {
-        console.log("Error getting document:", error);
-      });
 
       //checks friends list from firebase
-      await db.collection('users').doc(auth?.currentUser?.uid).collection('friends').orderBy('firstName')
-        .onSnapshot(querySnapshot => {
+          const r = collection(db, 'users', auth.currentUser.uid.toString(), 'friends')
+          const q = query(r, orderBy('firstName'))
+          const querySnapshot = await getDocs(q)
           const friends = [];
-          querySnapshot.forEach(documentSnapshot => {
+          querySnapshot.forEach((doc) => {
             friends.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
+              ...doc.data(),
+              key: doc.id,
             });
-          });
           setFriends(friends)
         })
 
@@ -434,7 +430,6 @@ const HomeScreen = ({ navigation }) => {
       setLatitude(loc.coords.latitude);
       setLongitude(loc.coords.longitude);
       if (!markersSet) {
-        console.log('Markers not set')
         getBars(loc.coords.latitude, loc.coords.longitude)
       }
       if (coordSet == false) {
@@ -442,7 +437,8 @@ const HomeScreen = ({ navigation }) => {
         setMapLongitude(loc.coords.longitude)
         setCoordSet(true)
       }
-      db.collection("users").doc(auth?.currentUser?.uid).update({
+      const userDocRef = doc(db, 'users', auth.currentUser.uid.toString())
+      await updateDoc(userDocRef, {
         latitude: loc.coords.latitude,
         longitude: loc.coords.longitude
       })

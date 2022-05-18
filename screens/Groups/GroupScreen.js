@@ -3,6 +3,8 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image } from
 import { auth, db } from '../../firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from '../../styles/styles'
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy, onSnapshot } from "firebase/firestore";
+
 
 
 const GroupScreen = ({ navigation }) => {
@@ -11,24 +13,42 @@ const GroupScreen = ({ navigation }) => {
   const [groups, setGroups] = useState([]); // Initial empty array of users
 
   const getGroupMembers = async (groupName) => {
-    let group = await db.collection("users").doc(auth?.currentUser?.uid).collection('groups').doc(groupName).collection('members').get();
-    return group.docs.map(doc => doc.data());
+    const groupRef = collection(db, 'users', auth.currentUser.uid.toString(), 'groups', groupName, 'members')
+    const groupQuery = await getDocs(groupRef)
+    return groupQuery.docs.map(doc => doc.data());
   }
 
   const switchVisible = async (groupName, visible) => {
-    db.collection('users').doc(auth?.currentUser?.uid).collection('groups').doc(groupName).update({
-      visible: !visible
-    })
-    let group = await getGroupMembers(groupName)
-    console.log(group)
-    group.forEach(member => {
-      db.collection('users').doc(auth?.currentUser?.uid).collection('friends').doc(member.uid).update({
+    const userDocRef = doc(db, 'users', auth.currentUser.uid.toString(), 'groups', groupName)
+    setDoc(userDocRef, {
         visible: !visible
-      })
+    }, {merge: true})
+    let group = await getGroupMembers(groupName)
+    group.forEach(member => {
+      const userDocRef = doc(db, 'users', auth.currentUser.uid.toString(), 'friends', member.uid)
+      setDoc(userDocRef, {
+          visible: !visible
+      }, {merge: true})
     })
   }
 
   useEffect(() => {
+    (async () => {
+      const r = collection(db, 'users', auth.currentUser.uid.toString(), 'groups')
+      const q = query(r, orderBy('groupName'))
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const friends = [];
+      querySnapshot.forEach((doc) => {
+        friends.push({
+          ...doc.data(),
+          key: doc.id,
+        });
+      })
+      setGroups(friends)
+      setLoading(false)
+    })
+    return () => unsubscribe();
+    })();
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={{marginRight: 20, backgroundColor: 'black', padding: 5, borderRadius: 10}}
@@ -37,23 +57,7 @@ const GroupScreen = ({ navigation }) => {
         </TouchableOpacity>
       )
     })
-    const subscriber = db.collection('users').doc(auth?.currentUser?.uid).collection('groups')
-      .onSnapshot(querySnapshot => {
-        const groups = [];
-
-        querySnapshot.forEach(documentSnapshot => {
-          groups.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-        });
-        setGroups(groups)
-        setLoading(false)
-
-      })
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
-  }, []);
+  }, [])
 
   if (loading) {
     return <ActivityIndicator />;
@@ -67,7 +71,7 @@ const GroupScreen = ({ navigation }) => {
       renderItem={({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('Group', { groupName: item.key })} style={styles.friends}>
           <Text style={styles.listsTextBlack}>{item.key}</Text>
-          <TouchableOpacity onPress={() => switchVisible(item.groupName, item.visible)}>
+          <TouchableOpacity onPress={() => switchVisible(item.groupName, item.visible)} style={{width: 50, height: 45, alignItems: 'center', justifyContent: 'center'}}>
             <Ionicons name={item.visible ? "radio-button-on-outline" : "radio-button-off-outline"} size={30} color={'#0992ed'} />
           </TouchableOpacity>
         </TouchableOpacity>

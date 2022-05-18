@@ -3,6 +3,8 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image} from 
 import { auth, db } from '../../firebase'
 import styles from '../../styles/styles'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy, onSnapshot } from "firebase/firestore";
+
 
 
 
@@ -13,23 +15,22 @@ const FriendsScreen = ({route, navigation}) => {
     const [friends, setFriends] = useState([]); // Initial empty array of users
 
     useEffect(() => {
-        const subscriber = db.collection('users').doc(auth?.currentUser?.uid).collection('groups').doc(groupName).collection('members').orderBy('firstName')
-          .onSnapshot(querySnapshot => {
-            const friends = [];
-    
-          querySnapshot.forEach(documentSnapshot => {
-            friends.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
-            });
+      (async () => {
+        const r = collection(db, 'users', auth.currentUser.uid.toString(), 'groups', groupName, 'members')
+        const q = query(r, orderBy('firstName'))
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const friends = [];
+        querySnapshot.forEach((doc) => {
+          friends.push({
+            ...doc.data(),
+            key: doc.id,
           });
-    
-          setFriends(friends)
-          setLoading(false)        
-    
         })
-        // Unsubscribe from events when no longer in use
-        return () => subscriber();
+        setFriends(friends)
+        setLoading(false)
+      })
+      return () => unsubscribe();
+      })();
       }, []);
     
       if (loading) {

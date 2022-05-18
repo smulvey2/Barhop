@@ -1,6 +1,7 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import { initializeApp } from "firebase/app"
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+//import firebaseui from "firebaseui";
 // Import the functions you need from the SDKs you need
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -15,16 +16,21 @@ const firebaseConfig = {
   appId: "1:732169641522:web:81b15f128046d4dd03262b",
   measurementId: "G-TVK72YLHNJ"
 };
-firebase.initializeApp(firebaseConfig)
+const firebaseApp = initializeApp(firebaseConfig)
 // Initialize Firebase
-let app;
-if (firebase.app.length === 0) {
-    app = firebase.initializeApp(firebaseConfig)
-}
-else {
-    app = firebase.app()
-}
+// let app;
+// if (firebase.app.length === 0) {
+//     app = firebase.initializeApp(firebaseConfig)
+// }
+// else {
+//     app = firebase.app()
+//}
 
-const db = app.firestore()
-const auth = firebase.auth()
+const db = getFirestore(firebaseApp)
+const auth = getAuth(firebaseApp);
+//const ui = new firebaseui.auth.AuthUI(window.firebase.auth())
+
+// This adds firebaseui to the page
+// It does everything else on its own
+
 export {db, auth}

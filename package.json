@@ -22,7 +22,8 @@
     "expo-location": "~14.0.1",
     "expo-status-bar": "~1.2.0",
     "express": "^4.17.1",
-    "firebase": "^8.10.1",
+    "firebase": "^9.6.11",
+    "firebaseui": "^6.0.1",
     "geolib": "^3.3.3",
     "graphql": "^15.7.2",
     "react": "17.0.1",
@@ -48,7 +49,7 @@
     "react-native-virtualized-view": "^0.1.5",
     "react-native-web": "0.17.1",
     "react-phone-number-input": "^3.1.50",
-    "save": "^2.4.0"
+    "save": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

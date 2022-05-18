@@ -2,6 +2,8 @@ import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, Image } from 'react-native'
 import { auth, db } from '../firebase'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy } from "firebase/firestore";
+
 
 const FriendInfo = ({route, navigation}) => {
 const {uid} = route.params;
@@ -15,30 +17,23 @@ const [totalFriends, setTotalFriends] = useState('')
 const [initials, setInitials] = useState('')
 
 useEffect(() => {
-  db.collection('users').doc(uid).get().then(function(doc) {
-    if (doc.exists) {
-        setFirstName(doc.data().firstName);
-        setLastName(doc.data().lastName);
-        setUrl(doc.data().photoURL);
-        setAbout(doc.data().about ? doc.data().about : "This user hasn't set their bio yet")
-        setTotalFriends(doc.data().totalFriends.toString())
-        setInitials(firstName.charAt(0) + lastName.charAt(0))
+  (async () => {
+  const docRef = doc(db, 'users', uid);
+  const docQuery = await getDoc(docRef);
+  if (docQuery.exists()) {
+        setFirstName(docQuery.data().firstName);
+        setLastName(docQuery.data().lastName);
+        setUrl(docQuery.data().photoURL);
+        setAbout(docQuery.data().about ? docQuery.data().about : "This user hasn't set their bio yet")
+        setTotalFriends(docQuery.data().totalFriends ? docQuery.data().totalFriends.toString() : "This user has no friends yet")
+        setInitials(docQuery.data().firstName.charAt(0) + docQuery.data().lastName.charAt(0))
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
     }
-}).catch(function(error) {
-    console.log("Error getting document:", error);
-});  
-
-setLoading(false)
+})();
 })
 
-    // Unsubscribe from events when no longer in use
-
-  if (loading) {
-    return <ActivityIndicator />;
-  }
 
 
   return(
@@ -57,9 +52,9 @@ setLoading(false)
       <Text style={{padding: 20}}>
         {about}
         </Text>
-        {/* <Text style={{padding:20}}>
+        <Text style={{padding:20}}>
           Bar Mates: {totalFriends}
-          </Text> */}
+          </Text>
     </View>
 
 </View>

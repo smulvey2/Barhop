@@ -6,6 +6,8 @@ import { TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Avatar, Input } from 'react-native-elements'
 import Icon from 'react-native-ionicons';
 import Ionicons from 'react-native-vector-icons/Ionicons'  
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy, deleteDoc, onSnapshot } from "firebase/firestore";
+
 
 const ProfileScreen = ({navigation}) => {
 
@@ -18,14 +20,14 @@ const ProfileScreen = ({navigation}) => {
     const [editAbout, setEditAbout] = useState(false)
     const [tempAbout, setTempAbout] = useState('')
 
-    const enterAbout = ()=> {
-        docRef = db.collection('users').doc(auth?.currentUser?.uid)
+    // const enterAbout = ()=> {
+    //     docRef = db.collection('users').doc(auth?.currentUser?.uid)
 
-        var setWithMerge = docRef.set({
-            about: tempAbout
-        }, { merge: true });
-        setEditAbout(false)
-    }
+    //     var setWithMerge = docRef.set({
+    //         about: tempAbout
+    //     }, { merge: true });
+    //     setEditAbout(false)
+    // }
 
     const signOut = ()=> {
         auth.signOut().then(() => {
@@ -35,43 +37,35 @@ const ProfileScreen = ({navigation}) => {
 
         })
     }
-    useEffect(()=> {
-        db.collection('users').doc(auth?.currentUser?.uid).get().then(function(doc) {
-            if (doc.exists) {
-                setTempAbout(doc.data().about ? doc.data().about : 'Share any information about yourself here')
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });  
-    }, []);
+    // useEffect(()=> {
+    //     db.collection('users').doc(auth?.currentUser?.uid).get().then(function(doc) {
+    //         if (doc.exists) {
+    //             setTempAbout(doc.data().about ? doc.data().about : 'Share any information about yourself here')
+    //         } else {
+    //             // doc.data() will be undefined in this case
+    //             console.log("No such document!");
+    //         }
+    //     }).catch(function(error) {
+    //         console.log("Error getting document:", error);
+    //     });  
+    // }, []);
     useEffect(() => {
-        db.collection('users').doc(auth?.currentUser?.uid).get().then(function(doc) {
-          if (doc.exists) {
-              setFirstName(doc.data().firstName);
-              setLastName(doc.data().lastName);
-              setUrl(doc.data().photoURL);
-              setAbout(doc.data().about ? doc.data().about : 'Share any information about yourself here')
-              setTotalFriends(doc.data().totalFriends ? doc.data().totalFriends.toString() : '0')
-          } else {
-              // doc.data() will be undefined in this case
-              console.log("No such document!");
-          }
-      }).catch(function(error) {
-          console.log("Error getting document:", error);
-      });  
-      
-      setLoading(false)
+        (async () => {
+            const docRef = doc(db, 'users', auth.currentUser.uid.toString());
+            const docQuery = await getDoc(docRef);
+            if (docQuery.exists()) {
+              console.log('hits')
+                  setFirstName(docQuery.data().firstName);
+                  setLastName(docQuery.data().lastName);
+                  setUrl(docQuery.data().photoURL);
+                  setAbout(docQuery.data().about ? docQuery.data().about : "This user hasn't set their bio yet")
+                  setTotalFriends(docQuery.data().totalFriends ? docQuery.data().totalFriends.toString() : "This user has no friends yet")
+              } else {
+                  // doc.data() will be undefined in this case
+                  console.log("No such document!");
+              }
+          })();
       })
-      
-          // Unsubscribe from events when no longer in use
-      
-        if (loading) {
-          return <ActivityIndicator />;
-        }
-      
       
         return(
       <View style ={{alignItems: 'center', justifyContent: 'center'}}>

@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from '../../styles/styles'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy, onSnapshot } from "firebase/firestore";
 
 
 header: ({ navigation, route, options, back }) => {
@@ -13,7 +14,7 @@ header: ({ navigation, route, options, back }) => {
 
   return (
     <MyHeader
-      title={title}
+      title={TitleComponent}
       leftButton={
         back ? <MyBackButton onPress={navigation.goBack} /> : undefined
       }
@@ -54,8 +55,7 @@ const removeFromGroup = (uid) => {
 }
 
 const createGroup = () => {
-
-  db.collection("users").doc(auth?.currentUser?.uid).collection('groups').doc(groupName).set({
+  setDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'groups', groupName), {
     groupName: groupName
   })
   .then(() => {
@@ -65,14 +65,11 @@ const createGroup = () => {
     console.error("Error writing document: ", error);
   });
 group.forEach(item => {
-  db.collection("users").doc(auth?.currentUser?.uid).collection('groups').doc(groupName).collection('members').doc(item.uid).set(
-    {
-      firstName: item.firstName,
-      lastName: item.lastName,
-      uid: item.uid,
-      photoURL: item.photoURL
-    }
-  )
+  setDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'groups', groupName, 'members', item.uid), {
+    firstName: firstName,
+    lastName: lastName,
+    uid: uid,
+  })
   .then(() => {
       console.log("Document successfully written!");
   })
@@ -84,26 +81,22 @@ navigation.popToTop()
 }
 
 useEffect(() => { 
-  navigation.setOptions({
-    headerTitle: TitleComponent
-  })
-  const subscriber = db.collection('users').doc(auth?.currentUser?.uid).collection('friends').orderBy('firstName')
-  .onSnapshot(querySnapshot => {
+  (async () => {
+    const r = collection(db, 'users', auth.currentUser.uid.toString(), 'friends')
+    const q = query(r, orderBy('firstName'))
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
     const friends = [];
-
-  querySnapshot.forEach(documentSnapshot => {
-    friends.push({
-      ...documentSnapshot.data(),
-      key: documentSnapshot.id,
-    });
-  });
-
-  setFriends(friends)
-  setLoading(false)        
-
-})
-// Unsubscribe from events when no longer in use
-return () => subscriber();
+    querySnapshot.forEach((doc) => {
+      friends.push({
+        ...doc.data(),
+        key: doc.id,
+      });
+    })
+    setFriends(friends)
+    setLoading(false)
+  })
+  return () => unsubscribe();
+  })();
 }, []);
 
 if (loading) {
