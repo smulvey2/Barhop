@@ -2,7 +2,8 @@ import React, { useLayoutEffect, useState, useEffect, useCallback } from 'react'
 import { View, Text, Image } from 'react-native'
 import { auth, db } from '../firebase'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
-import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy } from "firebase/firestore";
+import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy, deleteDoc } from "firebase/firestore";
+import styles from '../styles/styles'
 
 
 const FriendInfo = ({route, navigation}) => {
@@ -15,6 +16,11 @@ const [url, setUrl] = useState('')
 const [about, setAbout] = useState('')
 const [totalFriends, setTotalFriends] = useState('')
 const [initials, setInitials] = useState('')
+
+const removeFriend = () => {
+  deleteDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'friends', uid))
+  deleteDoc(doc(db, 'users', uid, 'friends', auth.currentUser.uid.toString()))
+  }
 
 useEffect(() => {
   (async () => {
@@ -33,7 +39,6 @@ useEffect(() => {
     }
 })();
 })
-
 
 
   return(
@@ -56,6 +61,10 @@ useEffect(() => {
           Bar Mates: {totalFriends}
           </Text>
     </View>
+    <TouchableOpacity style={{ backgroundColor: 'red', borderWidth: 2, borderRadius: 30, padding: 10, marginBottom: 28 }}
+     onPress={() => removeFriend()}>
+     <Text style={styles.genericTextBlack}>Remove Friend</Text>
+   </TouchableOpacity>
 
 </View>
 

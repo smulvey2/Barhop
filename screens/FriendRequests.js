@@ -38,7 +38,7 @@ deleteDoc(doc(db, 'users', auth.currentUser.uid.toString(), 'friendRequests', ui
 .catch((error) => {
     console.error("Error deleting document: ", error);
 });
-
+deleteDoc(doc(db, 'users', uid, 'sentRequests', auth.currentUser.uid.toString()))
 setDoc(doc(db, 'users', uid, 'friends', auth.currentUser.uid.toString()), {
   firstName: thisFirst,
   lastName: thisLast,
@@ -72,6 +72,17 @@ const declineFriend = (uid) => {
 useEffect(() => {
 
   (async () => {
+
+    const docRef = doc(db, 'users', auth.currentUser.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setThisFirst(docSnap.data().firstName)
+      setThisLast(docSnap.data().lastName)
+  } else {
+    // doc.data() will be undefined in this case
+  console.log("No such document!");
+  }
     const r = collection(db, 'users', auth.currentUser.uid.toString(), 'friendRequests')
     const q = query(r, orderBy('firstName'))
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -101,7 +112,7 @@ useEffect(() => {
       renderItem={({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('Friend Info', {uid: item.key})}  style={styles.friends}>
           <Text style={styles.listsTextBlack}>{item.firstName} {item.lastName}</Text>
-          <TouchableOpacity onPress={() => addFriend(item.key, item.firstName, item.lastName, item.photoURL)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
+          <TouchableOpacity onPress={() => addFriend(item.key, item.firstName, item.lastName)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>
           <Ionicons name='checkmark-outline' size={20} color='black' />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => declineFriend(item.key)} style={{height:50, width: 50, alignItems: 'center', justifyContent: 'center'}}>

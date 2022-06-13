@@ -54,7 +54,6 @@ const ProfileScreen = ({navigation}) => {
             const docRef = doc(db, 'users', auth.currentUser.uid.toString());
             const docQuery = await getDoc(docRef);
             if (docQuery.exists()) {
-              console.log('hits')
                   setFirstName(docQuery.data().firstName);
                   setLastName(docQuery.data().lastName);
                   setUrl(docQuery.data().photoURL);

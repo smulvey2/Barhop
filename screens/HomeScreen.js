@@ -475,7 +475,7 @@ const HomeScreen = ({ navigation }) => {
       style={{ flex: 1, backgroundColor: 'transparent' }}
       onSwipeDown={() => setModalVisible(false)}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
         <View style={{ flex: 1 }}>
           {/* define the mapview */}
           <MapView
