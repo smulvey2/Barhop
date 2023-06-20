@@ -95,7 +95,7 @@ const RegisterScreen = ({navigation}) => {
             ref={lastNameRef}
             onSubmitEditing={register}
             />
-            <Button title="Next" style ={styles.button} onPress={() => navigation.navigate('RegisterPhoneScreen')}/>
+            <Button title="Next" style ={styles.button} onPress={() => navigation.navigate('HomeScreen')}/>
             <Button title="Sign Up" style ={styles.button} onPress={register}/>
             <View style={{ flex : 1 }} />
             </View>

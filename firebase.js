@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app"
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+
 //import firebaseui from "firebaseui";
 // Import the functions you need from the SDKs you need
 // TODO: Add SDKs for Firebase products that you want to use
@@ -17,6 +18,7 @@ const firebaseConfig = {
   measurementId: "G-TVK72YLHNJ"
 };
 const firebaseApp = initializeApp(firebaseConfig)
+
 // Initialize Firebase
 // let app;
 // if (firebase.app.length === 0) {
@@ -28,6 +30,7 @@ const firebaseApp = initializeApp(firebaseConfig)
 
 const db = getFirestore(firebaseApp)
 const auth = getAuth(firebaseApp);
+
 //const ui = new firebaseui.auth.AuthUI(window.firebase.auth())
 
 // This adds firebaseui to the page

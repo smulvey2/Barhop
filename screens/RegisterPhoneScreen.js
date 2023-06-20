@@ -1,4 +1,3 @@
-import PhoneInput from 'react-native-phone-number-input'
 import React, {useState, useRef} from 'react'
 import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native'
 import { auth, db} from '../firebase'
@@ -37,7 +36,7 @@ signInWithPhoneNumber(auth, phoneNumber, appVerifier)
 
     return (
         <View style={{alignItems: 'center', paddingTop: 20}}>
-            <PhoneInput defaultCode="US"
+            <View defaultCode="US"
              defaultValue={value}
              layout="first"
              onChangeText={(text) => {

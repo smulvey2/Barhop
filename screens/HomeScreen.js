@@ -1,14 +1,12 @@
-import React, { useLayoutEffect, useState, useEffect, useCallback, Component } from 'react'
-import { View, Text, ActivityIndicator, Modal, StyleSheet, TouchableOpacity, Animated, TextInput, Button, Keyboard, TouchableWithoutFeedback, FlatList, KeyboardAvoidingView } from 'react-native'
-import { auth, db } from '../firebase'
-import { AntDesign } from '@expo/vector-icons'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import React, {useState, useEffect, TouchableWithoutFeedback} from 'react';
+import { View, Text, ActivityIndicator, Modal, StyleSheet, TouchableOpacity, TextInput, Button, Keyboard, FlatList, KeyboardAvoidingView } from 'react-native';
+import {auth, db} from '../firebase';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import {MapView, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { Marker } from 'react-native-maps'
-import { getDistance, isPointWithinRadius } from 'geolib';
 import GestureRecognizer from 'react-native-swipe-gestures';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { ScrollView } from 'react-native-virtualized-view';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import {ScrollView} from 'react-native-virtualized-view';
 import { collection, query, getDocs, doc, updateDoc, setDoc, getDoc, orderBy } from "firebase/firestore";
 
 const HomeScreen = ({ navigation }) => {
@@ -470,6 +468,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
     )
   }
+  else
   return (
     <GestureRecognizer
       style={{ flex: 1, backgroundColor: 'transparent' }}
